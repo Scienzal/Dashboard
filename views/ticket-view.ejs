@@ -1,0 +1,51 @@
+<%- include('./share/top.ejs') %>
+  <h2 class="">Dashboard</h2>
+  <div class="row row-cards mb-3">
+    <div class="col-4">
+      <div class="card card-sm card-borderless">
+        <div class="card-body">
+          <button onclick="closeTicket();" id="closebtn" class="btn btn-primary" style="width: 100%;">Close ticket</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4">
+      <div class="card card-sm card-borderless">
+        <div class="card-body">
+          <div class="subheader">Last action</div>
+          <span id="lastAction"><span class="placeholder">now</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4">
+      <div class="card card-sm card-borderless">
+        <div class="card-body">
+          <div class="subheader">Status</div>
+          <span id="status"><span class="placeholder"></span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <h2>Ticket <span id="ticketID">#</span>:</h2>
+  Subject: <i id="subject"></i>
+  <div id="ticket" class="mt-4">
+    <span class="placeholder">Loading messages...</span>
+  </div>
+
+  <div class="card">
+    <div class="card-body" id="postform">
+      <div class="mb-3">
+        <div class="input-group mb-2">
+          <textarea type="text" class="form-control" id="message" placeholder="Subject"></textarea>
+          <span class="input-group-text">
+            <button class="btn btn-primary" onclick="postTicketMessage()">Send</button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let id = `<%- req.params.id %>`;
+  </script>
+  <%- include('./share/bottom.ejs') %>

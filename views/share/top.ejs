@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Meegie</title>
+
+        <link href="/assets/tabler.min.css" rel="stylesheet">
+
+        <link href="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-2.1.8/datatables.min.css" rel="stylesheet">
+        <script src="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-2.1.8/datatables.min.js"></script>
+    </head>
+    <body class="theme-dark" data-bs-theme="dark">
+        <div class="page page-center">
+            <%- include('./nav.ejs') %>
+            <div class="page-wrapper">
+                <div class="page-body">
+                    <div class="container-xl">
+                        <div class="card bg-danger m-4" id="errorbox" style="display: none;">
+                            <div class="card-body"><b id="error">ERROR</b></div>
+                        </div>
+                        <div class="card bg-success m-4" id="okbox" style="display: none;">
+                            <div class="card-body"><b id="ok">OK</b></div>
+                        </div>

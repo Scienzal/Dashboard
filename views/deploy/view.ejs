@@ -1,0 +1,209 @@
+<%- include('../share/top.ejs') %>
+<h2>Deploy</h2>
+<div class="row row-cards mb-3">
+    <div class="col-6">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <div class="subheader">Resource limits:</div>
+                <div class="row">
+                    <div class="col">
+                        <%= job.ramRequired %> MB / <%= job.cpuRequired %> vCPU / <%= job.timeLimit/60 %> minutes
+                    </div>
+                    <div class="col-auto">
+                        <a class="float-r btn bg-blue-lt" href="/deploy/function/<%- job._id %>/resources">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-3">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <div class="subheader">Base image:</div>
+                <span id="baseImage"><%= job.baseImage %></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-3">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <a class="btn btn-primary" href="/deploy/function/<%- job._id %>/trigger" style="width: 100%;">Trigger job execution</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3>Base commands:</h3>
+<div class="card">
+    <div class="card-body">
+        <!-- LOGS -->
+        <div>
+            <textarea id="base" class="form-control" rows="15"><%- job.baseCommand %></textarea>
+
+            <button class="btn btn-primary m-2" onclick="saveBaseCommand()">Save</button>
+            <i><b>Note:</b> It might take some time for the cache to expire.</i>
+        </div>
+        <!-- END LOGS -->
+    </div>
+</div>
+
+<hr />
+
+<h3>Execution commands:</h3>
+<div class="card">
+    <div class="card-body">
+        <!-- LOGS -->
+        <div>
+            <textarea id="command" class="form-control" rows="5"><%- job.command %></textarea>
+
+            <button class="btn btn-primary m-2" onclick="saveMainCommand()">Save</button>
+        </div>
+        <!-- END LOGS -->
+    </div>
+</div>
+
+<hr />
+
+<h3>Executions (jobs):</h3>
+<div class="card">
+    <div class="card-body">
+
+        <!-- LIST JOBS -->
+         <div>
+
+            <table style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Status</th>
+                        <th>Time</th>
+                        <th>Cost</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="jobs">
+                    <!-- DATA -->
+                    <!-- END DATA -->
+                </tbody>
+            </table>
+
+         </div>
+         <!-- END LIST JOBS -->
+
+    </div>
+</div>
+<script>
+    async function deleteJob() {
+        var res = await fetch('/api/deploy/delete/<%= job._id %>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (res.ok == false) {
+            error('Failed to delete job.');
+            window.scrollTo(0, 0);
+        } else {
+            window.location.href = '/deploy';
+        }
+    }
+
+    async function saveBaseCommand() {
+        var res = await fetch('/api/deploy/<%= job._id %>/basecommand', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                command: document.getElementById('base').value
+            })
+        });
+
+        if (res.ok == false) {
+            error('Failed to delete job.');
+            window.scrollTo(0, 0);
+        } else {
+            window.scrollTo(0, 0);
+            ok('Saved!');
+        }
+    }
+
+    async function saveMainCommand() {
+        var res = await fetch('/api/deploy/<%= job._id %>/command', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                command: document.getElementById('command').value
+            })
+        });
+
+        if (res.ok == false) {
+            error('Failed to delete job.');
+            window.scrollTo(0, 0);
+        } else {
+            window.scrollTo(0, 0);
+            ok('Saved!');
+        }
+    }
+
+    async function getJobs() {
+        var el = document.getElementById('jobs');
+
+        el.innerHTML = 'Loading...';
+
+        var res = await fetch('/api/deploy/<%- job._id %>/jobs').then(r => r.json());
+
+        el.innerHTML = '';
+
+        res.forEach(job => {
+            let cost;
+            if (!job.cost) {
+                cost = '-.---';
+            } else {
+                cost = Number(job.cost).toFixed(3);
+            }
+
+            let status;
+
+            switch(job.status) {
+                case 'waiting':
+                    status = '<span class="badge bg-muted-lt">Waiting</span>';
+                    break;
+                case 'process':
+                    status = '<span class="badge bg-blue-lt">Running</span>';
+                    break;
+                case 'completed':
+                    status = '<span class="badge bg-green-lt">Finished</span> ';
+                    if (job.exitCode == 0) {
+                        status += '<span class="badge bg-green text-green-fg">Success</span>';
+                    } else {
+                        status += `<span class="badge bg-red text-red-fg">Error (${job.exitCode})</span>`;
+                    }
+                    break;
+                default:
+                    status = '<span class="badge bg-red-lt">Error</span>';
+                    break;
+            }
+
+            el.innerHTML += `
+                <tr>
+                    <td>${job._id}</td>
+                    <td>${status}</td>
+                    <td>${job.time == null ? 0 : job.time}s</td>
+                    <td>${cost} credits</td>
+                    <td>
+                        <a href="/deploy/job/${job._id}">View</a>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    getJobs();
+</script>
+<%- include('../share/bottom.ejs') %>

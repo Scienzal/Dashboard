@@ -1,0 +1,371 @@
+<%- include('../share/top.ejs') %>
+  <h2>Containers</h2>
+  <h3>Create container</h3>
+  <div class="card mb-2">
+    <div class="card-body">
+
+      <div class="mb-3">
+        <label class="form-label"><h3>Name:</h3></label>
+        <input type="text" class="form-control" id="name" placeholder="Job name" />
+      </div>
+
+      <hr />
+
+      <div class="mb-3">
+        <h3>CPU Type:</h3>
+        <div class="row">
+          <div class="col-6">
+            <div class="card">
+              <div class="card-body text-center">
+                <h1>x86</h1>
+                <div class="text-white pb-4">Your code runs on x86 cpus.</div>
+
+                <div class="block">
+                  <!-- <button class="btn btn-primary">Selected</button> -->
+                  <button class="btn" onclick="selectCPU('x86')" id="btn_x">Selected</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <div class="card-body text-center">
+                <h1>ARM</h1>
+                <div class="text-white pb-4">Your code runs on ARM cpus. ARM cpus are often cheaper.</div>
+
+                <div class="text-secondary">ARM is 30% cheaper compared to x86</div>
+
+                <div class="block">
+                  <button class="btn btn-primary" onclick="selectCPU('arm')" id="btn_arm">Select</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="m-2"><i>A client is a machine that runs your code.</i></div>
+      </div>
+
+      <hr />
+
+      <div class="mb-3">
+        <h3>Reliability settings:</h3>
+        <div class="row">
+          <!-- None -->
+          <div class="col-4">
+            <div class="card">
+              <div class="card-body text-center">
+                <h1>None</h1>
+                <div class="text-white">Your code can run on any client. Best for fault tolerant jobs.</div>
+
+                <!-- <div class="text-secondary p-2"><span class="badge bg-green text-green-fg" id="clientsAll">0</span> clients available</div> -->
+
+                <div class="block">
+                  <button class="btn" onclick="selectReli('none')" id="btn_none">Selected</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 2 -->
+          <div class="col-4">
+            <div class="card">
+              <div class="card-body text-center">
+                <h1>Stable</h1>
+                <div class="text-white">Your code only runs on stable clients. These clients have ran at least 1000 jobs and are manually verified. Verified clients have an average uptime of 99% per month.</div>
+
+                <!-- <div class="text-secondary p-2"><span class="badge bg-orange text-orange-fg" id="clientsVerify">0</span> clients available</div> -->
+
+                <div class="block">
+                  <button class="btn btn-primary" onclick="selectReli('stable')" id="btn_stable">Select</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 -->
+          <div class="col-4">
+            <div class="card">
+              <div class="card-body text-center">
+                <h1>Verified</h1>
+                <div class="text-white">Your code only runs on verified clients. Verified clients are provided by hosting providers and datacenters. These clients have better uptime, (optional) redundancy and larger uplinks.</div>
+
+                <!-- <div class="text-secondary p-2"><span class="badge bg-red text-red-fg">0</span> clients available</div> -->
+
+                <div class="block">
+                  <button class="btn btn-primary" onclick="selectReli('verified')" id="btn_verified">Select</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="m-2"><i>E</i></div> -->
+      </div>
+
+      <hr />
+
+      <div class="mb-3" id="dockerbox">
+        <label class="form-label"><h3>Base image:</h3></label>
+        <select class="form-select" id="base">
+          <!-- Debian -->
+          <optgroup label="Debian">
+            <option value="debian-12" selected>Debian 12</option>
+          </optgroup>
+
+          <!-- Ubuntu -->
+          <optgroup label="Ubuntu">
+            <option value="ubuntu-24">Ubuntu 24.04 LTS</option>
+          </optgroup>
+
+          <!-- Alpine -->
+          <optgroup label="Alpine">
+            <option value="alpine-3.20">Alpine v3.20</option>
+          </optgroup>
+        </select>
+        <i>More coming soon!</i>
+      </div>
+
+      <hr />
+
+      <div class="mb-3">
+        <label class="form-label"><h3>Install commands:</h3></label>
+        <p>These commands will be cached for faster start times later.</p>
+        <i>You have root access.</i>
+        <textarea class="form-control" id="cmd" rows="5" placeholder="apt update -y">
+apt update -y
+apt upgrade -y</textarea>
+      </div>
+
+      <hr />
+
+      <div class="mb-3">
+        <label class="form-label"><h3>Execution commands:</h3></label>
+        <textarea class="form-control" id="code" rows="10">
+find /home
+cat /request.json
+echo 'Done!'</textarea>
+      </div>
+
+      <hr />
+
+      <div class="mb-3">
+        <label class="form-label"><h3>Required resources:</h3></label>
+        <i>Per execution:</i>
+        <div class="row">
+          <div class="col-2 m-2">
+            <!-- RAM -->
+            <label class="form-label"><h3>RAM limit: (MB)</h3></label>
+            <div class="input-group input-group-flat">
+              <input type="text" class="form-control" autocomplete="off" id="ram" placeholder="1024" value="512" oninput="calculateCredits()">
+              <span class="input-group-text">
+                <kbd>MB</kbd>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-3 m-2">
+            <!-- CPU -->
+            <label class="form-label"><h3>CPU limit:</h3></label>
+            <div class="input-group input-group-flat">
+              <input type="text" class="form-control" autocomplete="off" id="cpu" placeholder="1" value="0.25" oninput="calculateCredits()">
+              <span class="input-group-text">
+                <kbd>vCPU</kbd>
+              </span>
+            </div>
+          </div>
+
+
+          <div class="col-2 m-2">
+            <label class="form-label"><h3>Max time:</h3></label>
+            <div class="input-group input-group-flat">
+              <input type="text" class="form-control" autocomplete="off" id="time" placeholder="60" value="600" oninput="calculateCredits()">
+              <span class="input-group-text">
+                <kbd>minutes</kbd>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="mb-3">
+        <div class="card">
+          <div class="card-header card-header-light">Cost per execution:</div>
+          <div class="card-body">
+            <p>
+              <b>NOTE: </b> This assumes that the job will last the whole <span id="noteMinute">0</span> minutes, which is not always the case. Costs can be cheaper.
+            </p>
+            <div class="row">
+              <div class="col-4">
+                <span id="cost"></span>
+              </div>
+              <div class="col-4">
+                <span id="credits"></span>
+              </div>
+              <div class="col-4">
+                <span id="euro"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <button class="btn btn-primary" onclick="createJob();">Create function</button>
+
+    </div>
+  </div>
+
+  <script>
+    function get(id) {
+      return document.getElementById(id).value;
+    }
+
+    let reli = 'none';
+    let cpu = 'x86';
+    selectReli('none');
+    selectCPU('x86');
+
+    async function createJob() {
+      const name = get('name');
+      const reliability = reli;
+
+      const baseImage = get('base');
+      const baseCommand = get('cmd');
+      const cmd = get('code');
+
+      const ram = parseInt(get('ram'));
+      const cpus = parseFloat(get('cpu'));
+      const time = parseInt(get('time'));
+
+      try {
+        var res = await fetch('/api/deploy', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            name,
+            reliability,
+
+            baseImage,
+            baseCommand,
+            cmd,
+
+            ramLimit: ram,
+            cpuLimit: cpus,
+            timeLimit: time,
+
+            cpu
+          })
+        });
+        var body = await res.json();
+        console.log(res, body);
+        if (res.ok == false) {
+          error(body.error);
+          window.scrollTo(0, 0);
+        } else {
+          window.location.href = '/deploy/function/' + body.id;
+        }
+      } catch(e) {
+        error(e);
+      }
+    }
+
+    function selectReli(type) {
+      reli = type;
+
+      if (type == 'none') {
+        document.getElementById('btn_none').classList.remove('btn-primary');
+        document.getElementById('btn_none').innerHTML = 'Selected';
+
+        document.getElementById('btn_stable').classList.add('btn-primary');
+        document.getElementById('btn_stable').innerHTML = 'Select';
+
+        document.getElementById('btn_verified').classList.add('btn-primary');
+        document.getElementById('btn_verified').innerHTML = 'Select';
+      } else if (type == 'stable') {
+        document.getElementById('btn_stable').classList.remove('btn-primary');
+        document.getElementById('btn_stable').innerHTML = 'Selected';
+
+        document.getElementById('btn_none').classList.add('btn-primary');
+        document.getElementById('btn_none').innerHTML = 'Select';
+
+        document.getElementById('btn_verified').classList.add('btn-primary');
+        document.getElementById('btn_verified').innerHTML = 'Select';
+      } else if (type == 'verified') {
+        document.getElementById('btn_stable').classList.add('btn-primary');
+        document.getElementById('btn_stable').innerHTML = 'Select';
+
+        document.getElementById('btn_none').classList.add('btn-primary');
+        document.getElementById('btn_none').innerHTML = 'Select';
+
+        document.getElementById('btn_verified').classList.remove('btn-primary');
+        document.getElementById('btn_verified').innerHTML = 'Selected';
+      } else {
+        console.log(`invalid type "${type}"`);
+      }
+
+      console.log(`Selected level "${type}"`);
+    }
+
+    function selectCPU(type) {
+      cpu = type;
+
+      if (type == 'x86') {
+        document.getElementById('btn_x').classList.remove('btn-primary');
+        document.getElementById('btn_x').innerHTML = 'Selected';
+
+        document.getElementById('btn_arm').classList.add('btn-primary');
+        document.getElementById('btn_arm').innerHTML = 'Select';
+      } else if (type == 'arm') {
+        document.getElementById('btn_arm').classList.remove('btn-primary');
+        document.getElementById('btn_arm').innerHTML = 'Selected';
+
+        document.getElementById('btn_x').classList.add('btn-primary');
+        document.getElementById('btn_x').innerHTML = 'Select';
+      } else {
+        console.log(`invalid type "${type}"`);
+      }
+
+      console.log(`Selected level "${type}"`);
+    }
+
+    function calculateCredits() {
+      const ram = parseInt(get('ram'));
+      const cpus = parseFloat(get('cpu'));
+      const time = parseInt(get('time'))*60;
+
+      document.getElementById('noteMinute').innerHTML = time/60;
+
+      let pricePerCredit = 0.000001;
+
+      var GBs = (ram/1024)*time;
+      var CPUs = cpus*time;
+
+      var GBCost = GBs * 1 * 3;
+      var CPUCost = CPUs * 5 * 3;
+
+      var GBEuro = (GBCost * pricePerCredit).toFixed(3);
+      var CPUEuro = (CPUCost * pricePerCredit).toFixed(3);
+
+      if (cpu == 'arm') {
+        // ARM is 30% cheaper
+        GBEuro = GBEuro* 0.7;
+        CPUEuro = CPUEuro * 0.7;
+      }
+
+      document.getElementById('cost').innerHTML = `GB-seconds: ${GBs} GB-s<br />`;
+      document.getElementById('cost').innerHTML += `CPU-seconds: ${CPUs} CPU-s<br />`;
+
+      document.getElementById('credits').innerHTML = `GB-seconds: ${GBCost} credits<br />`;
+      document.getElementById('credits').innerHTML += `CPU-seconds: ${CPUCost} credits<br />`;
+
+      document.getElementById('euro').innerHTML = `RAM: €${GBEuro}<br />`;
+      document.getElementById('euro').innerHTML += `CPU: €${CPUEuro}<br />`;
+    }
+
+    calculateCredits();
+  </script>
+  <%- include('../share/bottom.ejs') %>

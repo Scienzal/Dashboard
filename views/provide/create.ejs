@@ -1,0 +1,201 @@
+<%- include('../share/top.ejs') %>
+  <h2>Provide</h2>
+  <h3>Create client</h3>
+  <div class="card mb-2">
+    <div class="card-body">
+
+      <div class="mb-3">
+        <label class="form-label"><h3>Name:</h3></label>
+        <i>This is can be anything. It's used for recognition.</i>
+        <input type="text" class="form-control" id="name" placeholder="Client name" />
+      </div>
+
+      <hr />
+
+      <div class="mb-3">
+        <h3>CPU Type:</h3>
+        <div class="row">
+          <div class="col-6">
+            <div class="card">
+              <div class="card-body text-center">
+                <h1>x86</h1>
+
+                <div class="block">
+                  <button class="btn" onclick="selectCPU('x86')" id="btn_x">Selected</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <div class="card-body text-center">
+                <h1>ARM</h1>
+
+                <div class="text-secondary">ARM earns 30% less compared to x86 cpus.</div>
+
+                <div class="block">
+                  <button class="btn btn-primary" onclick="selectCPU('arm')" id="btn_arm">Select</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="mb-3">
+        <label class="form-label"><h3>Resource limit:</h3></label>
+        <div class="row">
+          <div class="col-2 m-2">
+            <!-- RAM -->
+            <label class="form-label"><h3>RAM limit: (MB)</h3></label>
+            <div class="input-group input-group-flat">
+              <input type="text" class="form-control" autocomplete="off" id="ram" placeholder="1024" oninput="calculateCredits()">
+              <span class="input-group-text">
+                <kbd>MB</kbd>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-3 m-2">
+            <!-- CPU -->
+            <label class="form-label"><h3>CPU limit:</h3></label>
+            <div class="input-group input-group-flat">
+              <input type="text" class="form-control" autocomplete="off" id="cpu" placeholder="1" oninput="calculateCredits()">
+              <span class="input-group-text">
+                <kbd>vCPU</kbd>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="mb-3">
+        <div class="card">
+          <div class="card-header card-header-light">Earnings:</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-6">
+                Max earnings per month:<br />
+                <span id="month"></span><br />
+                <i>The above figure assumes your client has a job all of the time. In reality this is most likely not the case.</i><br /><br />
+              </div>
+              <div class="col-6">
+                Expected earnings per month:<br />
+                <span id="expected"></span><br />
+                <i>The above figure assumes your client has a job 10% of the time. These numbers might not be acurate.</i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <button class="btn btn-primary" onclick="createClient();">Create client</button>
+
+    </div>
+  </div>
+
+  <script>
+    function get(id) {
+      return document.getElementById(id).value;
+    }
+
+    let cpu = 'x86';
+    selectCPU('x86');
+
+    async function createClient() {
+      const name = get('name');
+
+      const ram = parseInt(get('ram'));
+      const cpus = parseFloat(get('cpu'));
+
+      try {
+        var res = await fetch('/api/provide', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            name,
+
+            ramLimit: ram,
+            cpuLimit: cpus,
+
+            cpu
+          })
+        });
+        var body = await res.json();
+        console.log(res, body);
+        if (res.ok == false) {
+          error(body.error);
+          window.scrollTo(0, 0);
+        } else {
+          window.location.href = '/provide/client/' + body.id;
+        }
+      } catch(e) {
+        error(e);
+      }
+    }
+
+    function selectCPU(type) {
+      cpu = type;
+
+      if (type == 'x86') {
+        document.getElementById('btn_x').classList.remove('btn-primary');
+        document.getElementById('btn_x').innerHTML = 'Selected';
+
+        document.getElementById('btn_arm').classList.add('btn-primary');
+        document.getElementById('btn_arm').innerHTML = 'Select';
+      } else if (type == 'arm') {
+        document.getElementById('btn_arm').classList.remove('btn-primary');
+        document.getElementById('btn_arm').innerHTML = 'Selected';
+
+        document.getElementById('btn_x').classList.add('btn-primary');
+        document.getElementById('btn_x').innerHTML = 'Select';
+      } else {
+        console.log(`invalid type "${type}"`);
+      }
+
+      console.log(`Selected level "${type}"`);
+    }
+
+    function calculateCredits() {
+      const ram = parseInt(get('ram'));
+      const cpus = parseFloat(get('cpu'));
+
+      let pricePerCredit = 0.000001;
+
+      var GBs = (ram/1024);
+      var CPUs = cpus;
+
+      var GBCost = GBs * 1 * 3;
+      var CPUCost = CPUs * 5 * 3;
+
+      var GBEuro = (GBCost * pricePerCredit).toFixed(3);
+      var CPUEuro = (CPUCost * pricePerCredit).toFixed(3);
+
+      var GBEuroPerMonth = ((ram/1024)*((60*60)*730)*pricePerCredit*1).toFixed(3);
+      var CPUEuroPerMonth = (cpus*((60*60)*730)*pricePerCredit*5).toFixed(3);
+
+      if (cpu == 'arm') {
+        // ARM is 30% cheaper
+        GBEuro = GBEuro* 0.7;
+        CPUEuro = CPUEuro * 0.7;
+
+        GBEuroPerMonth = GBEuroPerMonth * 0.7;
+        CPUEuroPerMonth = CPUEuroPerMonth * 0.7;
+      }
+
+      document.getElementById('month').innerHTML = `RAM: €${GBEuroPerMonth}/month<br />`;
+      document.getElementById('month').innerHTML += `CPU: €${CPUEuroPerMonth}/month<br />`;
+
+      document.getElementById('expected').innerHTML = `RAM: €${(GBEuroPerMonth*0.10).toFixed(3)}/month<br />`;
+      document.getElementById('expected').innerHTML += `CPU: €${(CPUEuroPerMonth*0.10).toFixed(3)}/month<br />`;
+    }
+  </script>
+  <%- include('../share/bottom.ejs') %>

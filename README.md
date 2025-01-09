@@ -1,1 +1,1 @@
-# Dashboard
+# SimplePanel

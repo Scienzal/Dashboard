@@ -1,0 +1,39 @@
+<header class="navbar navbar-expand-sm d-print-none">
+    <div class="container-xl">
+      <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+        <a href="/">
+            <img src="/assets/logo.png" width="110" height="32" alt="Meegie" class="navbar-brand-image" />
+            Meegie
+        </a>
+      </h1>
+      <ul class="nav nav-tabs card-header-tabs pl-2">
+        <li class="nav-item">
+          <a href="/" class="nav-link text-white <% if(req.path == '/' || req.path == '') { %>active<% } %>">Home</a>
+        </li>
+        <li class="nav-item nav-link">
+          —
+        </li>
+        <li class="nav-item">
+          <a href="/deploy" class="nav-link text-white <% if(String(req.path).startsWith('/deploy')) { %>active<% } %>">Deploy</a>
+        </li>
+        <li class="nav-item">
+          <a href="/provide" class="nav-link text-white <% if(String(req.path).startsWith('/provide')) { %>active<% } %>">Provide</a>
+        </li>
+        <li class="nav-item nav-link">
+          —
+        </li>
+        <!-- <li class="nav-item">
+          <a href="/tickets" class="nav-link text-white <% if(String(req.path).startsWith('/ticket')) { %>active<% } %>">Support tickets</a>
+        </li>
+        <li class="nav-item nav-link">
+          —
+        </li> -->
+        <li class="nav-item">
+          <a href="/billing" class="nav-link text-white <% if(req.path == '/billing') { %>active<% } %>">Billing</a>
+        </li>
+        <li class="nav-item">
+          <a href="/profile" class="nav-link text-white <% if(req.path == '/profile') { %>active<% } %>">Profile</a>
+        </li>
+      </ul>
+    </div>
+  </header>

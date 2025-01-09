@@ -1,0 +1,90 @@
+<%- include('./share/top.ejs') %>
+<h2 class="">Profile</h2>
+
+<div class="card mb-2">
+    <div class="card-body">  
+          <h3>Edit profile</h3>
+          <div class="hr-text">DETAILS</div>
+          <div class="mb-3">
+            <label class="form-label">First name</label>
+            <input type="text" class="form-control" id="firstname" placeholder="First name" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Last name</label>
+            <input type="text" class="form-control" id="lastname" placeholder="Last name" />
+          </div>
+
+          <div class="hr-text">ADDRESS</div>
+          <div class="mb-3">
+            <label class="form-label">Country</label>
+            <input type="text" class="form-control" id="country" placeholder="Country" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Full address</label>
+            <input type="text" class="form-control" id="address" placeholder="Address" />
+          </div>
+
+          <div class="hr-text">CONTACT</div>
+          <div class="mb-3">
+            <label class="form-label">Phone number</label>
+            <input type="text" class="form-control" id="phone" placeholder="+00 0123456789" />
+          </div>
+
+          <div class="hr-text">FINISH</div>
+          <div class="mb-3 text-center">
+            <button class="btn btn-primary text-center" style="width: 100%;" onclick="updateUser()">Save</button>
+          </div>
+
+    </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+
+    <div class="hr-text">DANGER ZONE</div>
+    <h1>Delete account:</h1>
+    <button class="btn btn-danger" id="delete" onclick="AccDelete(this);">Delete account</button>
+
+    
+    <div class="hr-text">ACCOUNT DATA</div>
+    <h1>Request account data:</h1>
+    <a class="btn btn-primary" href="/api/user/data">Get account data</a>
+
+    <div class="hr-text">SESSIONS:</div>
+    <a class="btn btn-primary" href="/api/user/logout">Logout</a>
+  </div>
+</div>
+<script>
+  let clicks = 0;
+  async function AccDelete(btn) {
+    console.log(btn);
+
+    if (clicks == 0) {
+      btn.disabled = true;
+      btn.innerHTML = 'Click again in 5 seconds';
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = 'Delete account';
+        clicks = 1;
+      }, 5000);
+    }
+    if (clicks == 1) {
+      const res = await fetch('/api/user/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const body = await res.json();
+      console.log(res, body);
+      if (res.ok == false) {
+        error(body.error);
+        window.scrollTo(0, 0);
+      } else {
+        window.location.href = '/';
+      }
+    }
+  }
+</script>
+<%- include('./share/bottom.ejs') %>

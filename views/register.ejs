@@ -1,0 +1,50 @@
+<%- include('./share/top.ejs') %>
+<div class="card card-md p-2 container-tight">
+    <div class="card-body">
+        <h1 class="text-center">Register at Meegie</h1>
+
+        <div class="hr-text">ACCOUNT</div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="text" class="form-control" id="email" placeholder="Email" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password" />
+          </div>
+
+          <div class="hr-text">DETAILS</div>
+          <div class="mb-3">
+            <label class="form-label">First name</label>
+            <input type="text" class="form-control" id="firstname" placeholder="First name" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Last name</label>
+            <input type="text" class="form-control" id="lastname" placeholder="Last name" />
+          </div>
+
+          <div class="hr-text">ADDRESS</div>
+          <div class="mb-3">
+            <label class="form-label">Country</label>
+            <input type="text" class="form-control" id="country" placeholder="Country" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Full address</label>
+            <input type="text" class="form-control" id="address" placeholder="Address" />
+          </div>
+
+          <div class="hr-text">CONTACT</div>
+          <div class="mb-3">
+            <label class="form-label">Phone number</label>
+            <input type="text" class="form-control" id="phone" placeholder="+00 0123456789" />
+          </div>
+
+          <div class="hr-text">FINISH</div>
+          <div class="mb-3 text-center">
+            <button class="btn btn-primary text-center" style="width: 100%;" onclick="register()">Create account</button>
+          </div>
+
+          <a href="/login">Login instead</a>
+    </div>
+</div>
+<%- include('./share/bottom.ejs') %>

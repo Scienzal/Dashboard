@@ -1,0 +1,53 @@
+<%- include('../share/top.ejs') %>
+<h2>Deploy</h2>
+<div class="row row-cards mb-3">
+    <div class="col-6">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <div class="subheader">Function count:</div>
+                <span id="containerCount"><%= jobs.length %> <b>functions</b></span><br />
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <a href="/deploy/create" class="btn btn-primary" style="width: 100%;">Create function</a>
+            </div>
+        </div>
+    </div>
+</div>
+<h3>Functions:</h3>
+<div class="card mb-2">
+    <div class="card-body">
+        
+
+        <div class="table-responsive">
+            <table class="table table-vcenter">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>CPU</th>
+                  <th class="w-1"></th>
+                </tr>
+              </thead>
+              <tbody id="vps">
+                <% for(var i=0; i<jobs.length; i++) {%>
+                    <tr>
+                        <td><%= jobs[i]._id %></td>
+                        <td><%= jobs[i].name %></td>
+                        <td><%= jobs[i].cpu %></td>
+                        <td><a class="btn btn-primary" href="/deploy/function/<%= jobs[i]._id %>">View</a></td>
+                    </tr>
+                 <% } %>
+              </tbody>
+            </table>
+          </div>
+          
+
+
+    </div>
+</div>
+<%- include('../share/bottom.ejs') %>

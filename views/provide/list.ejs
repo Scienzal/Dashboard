@@ -1,0 +1,76 @@
+<%- include('../share/top.ejs') %>
+<h2>Provide</h2>
+<div class="row row-cards mb-3">
+    <div class="col-6">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <div class="subheader">Client count:</div>
+                <span id="containerCount"><%= clients.length %> <b>Clients</b></span><br />
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <a href="/provide/create" class="btn btn-primary" style="width: 100%;">Register client</a>
+            </div>
+        </div>
+    </div>
+</div>
+<h3>Clients:</h3>
+<div class="card mb-2">
+    <div class="card-body">
+        
+
+        <div class="table-responsive">
+            <table class="table table-vcenter">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>CPU</th>
+                  <th>Status</th>
+                  <th>Reputation</th>
+                  <th>Max Resources</th>
+                  <th class="w-1"></th>
+                </tr>
+              </thead>
+              <tbody id="vps">
+                <% for(var i=0; i<clients.length; i++) {%>
+                    <tr>
+                        <td><%= clients[i]._id %></td>
+                        <td><%= clients[i].name %></td>
+                        <td><%= clients[i].cpu %></td>
+                        <td>
+                            <% if(clients[i].status == 'waiting' || clients[i].status == 'process') { %>
+                                <span class="badge bg-green text-green-fg">Active</span>
+                            <% } %>
+                            <% if(clients[i].status == 'offline') { %>
+                                <span class="badge bg-red text-red-fg">Offline</span>
+                            <% } %>
+                        </td>
+                        <td>
+                            <% if(clients[i].reputation == 0) { %>
+                                <span class="badge bg-orange text-orange-fg">None</span>
+                            <% } %>
+                            <% if(clients[i].reputation == 1) { %>
+                                <span class="badge bg-blue text-blue-fg">Stable</span>
+                            <% } %>
+                            <% if(clients[i].reputation == 2) { %>
+                                <span class="badge bg-green text-green-fg">Verified</span>
+                            <% } %>
+                        </td>
+                        <td><%= clients[i].maxRAM/1024 %> GB ram - <%= clients[i].maxCPU %> vCPU</td>
+                        <td><a class="btn btn-primary" href="/provide/client/<%= clients[i]._id %>">View</a></td>
+                    </tr>
+                 <% } %>
+              </tbody>
+            </table>
+          </div>
+          
+
+
+    </div>
+</div>
+<%- include('../share/bottom.ejs') %>

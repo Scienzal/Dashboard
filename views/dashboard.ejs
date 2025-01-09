@@ -1,0 +1,86 @@
+<%- include('./share/top.ejs') %>
+<h2 class="">Dashboard</h2>
+<div class="row row-cards mb-3">
+    <div class="col-4">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <div class="subheader">Welcome</div>
+                <span id="name"><span class="placeholder">Loading data....</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <div class="subheader">Balance</div>
+                <span id="balance"><span class="placeholder">Loading data....</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <div class="subheader">Open tickets</div>
+                <span id="tickets"><span class="placeholder">Loading data....</span></span>
+            </div>
+        </div>
+    </div>
+</div>
+<h3>Start now</h3>
+<!-- <div class="card mb-2">
+    <div class="card-body">
+        <h3>Services</h3>
+    </div>
+</div> -->
+<div class="row row-cards">
+    <div class="col-6">
+        <div class="card empty">
+            <!-- <div class="empty"></div> -->
+            <div class="card-stamp">
+                <div class="card-stamp-icon bg-yellow">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/cloud-upload -->
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-cloud-upload">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" />
+                    <path d="M9 15l3 -3l3 3" />
+                    <path d="M12 12l0 9" />
+                  </svg>
+                </div>
+              </div>
+            <div class="card-body text-center">
+                <h1>Deploy</h1>
+                <div class="pb-4">Deploy your code on our global network of devices</div>
+
+                <div class="block">
+                    <a class="btn btn-primary" href="/deploy">Deploy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card empty">
+            <!-- <div class="empty"></div> -->
+            <div class="card-stamp">
+                <div class="card-stamp-icon bg-yellow">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/file-datavase -->
+                  <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-file-database">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M12 12.75m-4 0a4 1.75 0 1 0 8 0a4 1.75 0 1 0 -8 0" />
+                    <path d="M8 12.5v3.75c0 .966 1.79 1.75 4 1.75s4 -.784 4 -1.75v-3.75" />
+                    <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                    <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                  </svg>
+                </div>
+              </div>
+            <div class="card-body text-center">
+                <h1>Provide</h1>
+                <div class="pb-4">Earn credits by providing compute prower</div>
+
+                <div class="block">
+                    <button class="btn btn-success">Provide</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('./share/bottom.ejs') %>

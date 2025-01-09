@@ -1,0 +1,38 @@
+<%- include('../share/top.ejs') %>
+<h2>Trigger <%- job.name %></h2>
+
+<a class="btn bg-blue-lt m-2" href="/deploy/function/<%- job._id %>">&lt; Back</a>
+
+<div class="card">
+    <div class="card-body">
+        <!-- LOGS -->
+        <div>
+            <p>Data for the job. Needs to be text.</p>
+<textarea id="data" class="form-control" rows="15" placeholder='{"Hello": "World"}'></textarea>
+
+            <button class="btn btn-primary m-2" onclick="trigger();">Trigger execution</button>
+        </div>
+        <!-- END LOGS -->
+    </div>
+</div>
+
+<script>
+    async function trigger() {
+        var res = await fetch('/api/deploy/<%= job._id %>/trigger', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            body: String(document.getElementById('data').value)
+        });
+
+        if (res.ok == false) {
+            error('Failed to trigger function.');
+            window.scrollTo(0, 0);
+        } else {
+            var d = await res.json();
+            window.location.href = '/deploy/job/' + d.jobID;
+        }
+    }
+</script>
+<%- include('../share/bottom.ejs') %>

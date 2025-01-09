@@ -1,0 +1,103 @@
+<%- include('../share/top.ejs') %>
+<h2>View job</h2>
+
+<a class="btn bg-blue-lt m-2" href="/deploy/function/<%- job.functionID %>">&lt; Back</a>
+
+<div class="row row-cards mb-3">
+    <div class="col-6">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <div class="subheader">Job status:</div>
+
+                <div class="row">
+                    <div class="col">
+                        <% if(job.status == 'waiting' || job.status == 'pending') { %>
+                            <span class="badge bg-orange text-orange-fg">Waiting</span>
+                        <% } %>
+                        <% if(job.status == 'process') { %>
+                            <span class="badge bg-blue text-blue-fg">Processing</span>
+                        <% } %>
+                        <% if(job.status == 'completed') { %>
+                            <span class="badge bg-green text-green-fg">Completed</span>
+                        <% } %>
+                    </div>
+                    <div class="col-auto">
+                        <% if (job.status == 'waiting') { %>
+                        <button class="float-r btn bg-red-lt" onclick="cancelJob();">Cancel</button>
+                        <% } else { %>
+                            <button class="btn bg-muted-lt" disabled>Can't cancel</button>
+                        <% } %>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <div class="subheader">Resources:</div>
+                <span id="ram"><%= job.ramRequired %> MB / <%= job.cpuRequired %> vCPU / <%= job.timeLimit/60 %> minutes</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3>Data:</h3>
+<div class="card">
+    <div class="card-body">
+        <!-- DATA -->
+        <div>
+            <pre><code id="data"><%- job.data %></code></pre>
+        </div>
+        <!-- END DATA -->
+    </div>
+</div>
+
+<h3>Logs:</h3>
+<div class="card">
+    <div class="card-body">
+        <!-- LOGS -->
+        <div>
+            <pre><code id="logs">Loading...</code></pre>
+        </div>
+        <!-- END LOGS -->
+    </div>
+</div>
+<script>
+    function log(txt) {
+        document.getElementById('logs').innerHTML += txt;
+    }
+
+    async function logs() {
+        var res = await fetch('/api/deploy/logs/<%= job._id %>').then(r => r.json());
+
+        document.getElementById('logs').innerHTML = '';
+
+        res.forEach(txt => {
+            log(txt + '<br />');
+        });
+    }
+
+    async function cancelJob() {
+        var res = await fetch('/api/deploy/<%= job._id %>/cancel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (res.ok == false) {
+            error('Failed to cancel job.');
+            window.scrollTo(0, 0);
+        } else {
+            window.location.href = '/deploy/function/<%- job.functionID %>';
+        }
+    }
+
+    logs();
+
+    setInterval(logs, 30*1000);
+</script>
+<%- include('../share/bottom.ejs') %>

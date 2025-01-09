@@ -1,0 +1,46 @@
+<%- include('./share/top.ejs') %>
+<h2 class="">Dashboard</h2>
+<div class="row row-cards mb-3">
+    <div class="col-6">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <div class="subheader">Open tickets</div>
+                <span id="ticketCount"><span class="placeholder">0</span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <a href="/tickets/new" class="btn btn-primary" style="width: 100%;">Create ticket</a>
+            </div>
+        </div>
+    </div>
+</div>
+<h3>Tickets</h3>
+<div class="card mb-2">
+    <div class="card-body">
+        
+
+        <div class="table-responsive">
+            <table class="table table-vcenter">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                  <th>Last action</th>
+                  <th class="w-1"></th>
+                </tr>
+              </thead>
+              <tbody id="tickets">
+              </tbody>
+            </table>
+          </div>
+          
+
+
+    </div>
+</div>
+<%- include('./share/bottom.ejs') %>

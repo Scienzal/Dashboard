@@ -1,0 +1,78 @@
+<%- include('../share/top.ejs') %>
+<h2>Provide</h2>
+<div class="row row-cards mb-3">
+    <div class="col-4">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <div class="subheader">Client status:</div>
+
+                <% if(clients.status == 'waiting' || clients.status == 'process') { %>
+                    <span class="badge bg-green text-green-fg">Active</span>
+                <% } %>
+                <% if(clients.status == 'offline') { %>
+                    <span class="badge bg-red text-red-fg">Offline</span>
+                <% } %>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <div class="subheader">Connect code:</div>
+                <span id="token"><%= clients.code %></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="card card-sm card-borderless">
+            <div class="card-body">
+                <div class="subheader">Client resources:</div>
+                <span id="ram"><%= clients.maxRAM/1024 %> GB ram / <%= clients.maxCPU %> vCPU</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card card-sm card-borderless">
+    <div class="card-body">
+        <h3>DELETE:</h3>
+        <button class="btn btn-danger" <% if (clients.status != 'offline') { %>disabled<% } else { %> onclick="deleteClient();"<% } %> style="width: 100%;">Delete</button>
+
+        <% if (clients.status != 'offline') { %>
+            <b>NOTE:</b> <i>In order to delete your client, it needs to be offline.</i>
+        <% } %>
+    </div>
+</div>
+
+<!-- TODO: Show job list and it's earnings -->
+<!-- <h3>Job list:</h3>
+<div class="card">
+    <div class="card-body">
+
+        <div>
+            <pre><code id="logs"></code></pre>
+        </div>
+
+    </div>
+</div> -->
+<script>
+    async function deleteClient() {
+        var res = await fetch('/api/provide/delete/<%= clients._id %>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (res.ok == false) {
+            error('Failed to delete client.');
+            window.scrollTo(0, 0);
+        } else {
+            window.location.href = '/provide';
+        }
+    }
+</script>
+<%- include('../share/bottom.ejs') %>

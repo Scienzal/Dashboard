@@ -1,0 +1,71 @@
+<%- include('../share/top.ejs') %>
+<h2>Edit resources for <%- job.name %></h2>
+<div class="card">
+    <div class="card-body">
+        
+        <div class="row">
+            <div class="col-2 m-2">
+              <!-- RAM -->
+              <label class="form-label"><h3>RAM limit: (MB)</h3></label>
+              <div class="input-group input-group-flat">
+                <input type="text" class="form-control" autocomplete="off" id="ram" placeholder="1024" value="<%- job.ramRequired %>" oninput="calculateCredits()">
+                <span class="input-group-text">
+                  <kbd>MB</kbd>
+                </span>
+              </div>
+            </div>
+  
+            <div class="col-3 m-2">
+              <!-- CPU -->
+              <label class="form-label"><h3>CPU limit:</h3></label>
+              <div class="input-group input-group-flat">
+                <input type="text" class="form-control" autocomplete="off" id="cpu" placeholder="1" value="<%- job.cpuRequired %>" oninput="calculateCredits()">
+                <span class="input-group-text">
+                  <kbd>vCPU</kbd>
+                </span>
+              </div>
+            </div>
+  
+  
+            <div class="col-2 m-2">
+              <label class="form-label"><h3>Max time:</h3></label>
+              <div class="input-group input-group-flat">
+                <input type="text" class="form-control" autocomplete="off" id="time" placeholder="60" value="<%- job.timeLimit/60 %>" oninput="calculateCredits()">
+                <span class="input-group-text">
+                  <kbd>minutes</kbd>
+                </span>
+              </div>
+            </div>
+          </div>
+
+        <div class="m-2">
+            <button class="btn btn-primary" onclick="saveResources();">Save</button>
+        </div>
+        
+    </div>
+</div>
+
+<script>
+    async function saveResources() {
+        var res = await fetch('/api/deploy/<%= job._id %>/resources', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                ram: parseInt(document.getElementById('ram').value),
+                cpu: parseFloat(document.getElementById('cpu').value),
+                time: parseInt(document.getElementById('time').value)
+            })
+        });
+
+        if (res.ok == false) {
+            error('Failed to update function.');
+            window.scrollTo(0, 0);
+        } else {
+            var d = await res.json();
+            window.location.href = '/deploy/job/<%- job._id %>';
+        }
+    }
+</script>
+<%- include('../share/bottom.ejs') %>

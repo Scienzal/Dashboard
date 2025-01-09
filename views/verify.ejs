@@ -1,0 +1,16 @@
+<%- include('./share/top.ejs') %>
+<div class="card card-md p-2 container-tight">
+    <div class="card-body">
+        <h1 class="text-center">Verify your email</h1>
+
+        <div class="mb-3">
+            <label class="form-label">Verify code</label>
+            <input type="text" class="form-control" id="key" placeholder="Verify code" />
+          </div>
+
+          <div class="mb-3 text-center">
+            <button class="btn btn-primary text-center" style="width: 100%;" onclick="sendVerifyToken()">Verify</button>
+          </div>
+    </div>
+</div>
+<%- include('./share/bottom.ejs') %>

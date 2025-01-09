@@ -1,0 +1,22 @@
+<%- include('./share/top.ejs') %>
+<div class="card card-md p-2 container-tight">
+    <div class="card-body">
+        <h1 class="text-center">Login to Meegie</h1>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="text" class="form-control" id="email" placeholder="Email" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password" />
+          </div>
+
+          <div class="mb-3 text-center">
+            <button class="btn btn-primary text-center" style="width: 100%;" onclick="login()">Login</button>
+          </div>
+
+          <a href="/register">Register instead</a>
+    </div>
+</div>
+<%- include('./share/bottom.ejs') %>
